@@ -1,0 +1,24 @@
+this file is a note of how to implement load balancing in the event a particular website gets a lot of visitors.
+
+have a "head" server with a beefy nic and very fast cpu.
+
+this server will run a very empty linux distro, such as a generic debian with no packages or gui.
+the server will run a single C program which serves a purpose of load balancing.
+
+this c program will do the low level: socket, bind, listen system calls for tcp,
+then it will run an infinite loop that does an accept() system call and then it will pass
+the generated file descriptor to a thread pool, which will consist of a singly linked list
+containing links with int socket file descriptors, which threads will read and do the following.
+
+the threads will run a function which:
+calls read() for a small number of bytes, verifies that it is an http message,
+then sends a HTTP 307 Temporary Redirect message with a location header guiding the clients
+browser to connect to the ip address of another server.
+
+the ip address of the other servers (the servers which actually handle the request) will
+be located in an array of character pointers, which each thread will use to systematically
+pick a server to direct the client to connect to.
+
+this approach definitely has some limits, e.g. listen() can only handle 4096 socket file
+descriptors in its backlog, so if an influx of clients try to connect at once, clients
+could start to get dropped.
