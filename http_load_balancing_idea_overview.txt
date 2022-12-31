@@ -23,6 +23,12 @@ this approach definitely has some limits, e.g. listen() can only handle 4096 soc
 descriptors in its backlog, so if an influx of clients try to connect at once, clients
 could start to get dropped.
 
+THE MAIN ISSUE:
+is the fact that every time a client connects, the server needs to call accept(),
+which opens a tcp connection, which incurs a TCP handshake, which takes time,
+then the server needs to recv a little data, which takes time, then the server needs
+to send data, then close the connection, which may take time. TCP slow start may be a problem
+if a lot of clients connect simultaneousley.
 
 ///////////////////////
 another idea
