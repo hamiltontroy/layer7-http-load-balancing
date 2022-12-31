@@ -22,3 +22,12 @@ pick a server to direct the client to connect to.
 this approach definitely has some limits, e.g. listen() can only handle 4096 socket file
 descriptors in its backlog, so if an influx of clients try to connect at once, clients
 could start to get dropped.
+
+
+///////////////////////
+another idea
+
+this is theoretical, so I dont know if it would work.
+when the head server does accept(), send the generated file descriptor
+to another server, and let that server call recv() and do all the stuff.
+I dont know if that could work, becuase the other server has a different ip.
