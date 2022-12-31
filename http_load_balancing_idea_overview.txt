@@ -28,6 +28,13 @@ could start to get dropped.
 another idea
 
 this is theoretical, so I dont know if it would work.
-when the head server does accept(), send the generated file descriptor
+when the head server does accept(), send the connection info
 to another server, and let that server call recv() and do all the stuff.
 I dont know if that could work, becuase the other server has a different ip.
+
+//////////////////
+another idea
+
+this is theoretical.
+do a HTTP 201 Created code with the location header set to the ip of a different (delivery) server.
+
